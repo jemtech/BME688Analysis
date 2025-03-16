@@ -1,0 +1,16 @@
+[DB]
+user = 
+password = 
+database = 
+host = 
+data_table =
+[Demon]
+PidFile = /tmp/BME688Analysis.pid
+[Logger]
+filename = debug.log
+format = %(asctime)s %(message)s
+level = DEBUG
+[MQTT]
+host = 
+port = 1883
+clientName = BME688AI
