@@ -2,6 +2,7 @@ import conf.Config as Config
 import db.DBConnection as DB
 import matplotlib.pyplot as pyplot
 from data.entry import Entry
+from data.cluster import Cluster
 
 def loadData():
     tableName = Config.getConfig()['DB']['data_table']
@@ -15,40 +16,40 @@ def __handleData(cursor):
         entry = Entry(ohm0, ohm1, ohm2, ohm3, ohm4, ohm5, ohm6, ohm7, ohm8, ohm9)
         data.append(entry)
 
-def plotCosinesToCenter():
-    pyplot.plot(cosinesToCenter(), "r")
-    pyplot.plot(cosinesToMin(), "g")
-    pyplot.plot(cosinesToMax(), "b")
-    pyplot.ylabel('cosine to data r = center g = min b = max')
+def plotCosines():
+    fig, ax = pyplot.subplots()
+
+
+    for cluster in clusters:
+        ax.plot(cosinesToCluster(cluster), label=cluster.name)
+    #pyplot.plot(cosinesToCenter(), "r")
+    #pyplot.plot(cosinesToMin(), "g")
+    #pyplot.plot(cosinesToMax(), "b")
+    legend = ax.legend(loc='best', shadow=True, fontsize='x-large')
+    pyplot.ylabel('cosine to data')
     pyplot.xlabel('time')
     pyplot.show()
 
-def cosinesToCenter():
-    Entry.getCenter() #init center
+def cosinesToCluster(cluster: Cluster) -> list[float]:
     cosines = []
     for entry in data:
-        cosines.append(entry.cosineToCenter())
+        cosines.append(cluster.cosine(entry))
     return cosines
 
-def cosinesToMin():
-    Entry.getCenter() #init center
-    cosines = []
-    for entry in data:
-        cosines.append(entry.cosineToMin())
-    return cosines
-
-def cosinesToMax():
-    Entry.getCenter() #init center
-    cosines = []
-    for entry in data:
-        cosines.append(entry.cosineToMax())
-    return cosines
+clusters = []
+def initClusters():
+    clusters.append(Cluster(data[865:925] + data[311:324], "fresh air"))
+    clusters.append(Cluster(data[332:860], "used air"))
+    clusters.append(Cluster(data[940:947], "Isopropanol"))
+    clusters.append(Cluster(data[975:992], "Butan"))
+    clusters.append(Cluster(data[1006:1023], "Petrol"))
 
 def main():
     print("Start")
     Config.configLogger()
     loadData()
-    plotCosinesToCenter()
+    initClusters()
+    plotCosines()
 
 
 if __name__ == "__main__":
