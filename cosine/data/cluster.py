@@ -6,6 +6,7 @@ class Cluster(object):
     centroid = None
     centroidSqSumm = None
     name = None
+    clusterDimesion = None
 
     def __init__(self, entries: list[Entry], name: str):
         self.entries = entries
@@ -13,11 +14,20 @@ class Cluster(object):
         self.__calculateCentroid()
 
     def __calculateCentroid(self):
-        self.centroid = [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]
+        size = len(self.entries)
+        if size == 0:
+            self.centroid = None
+            return
+        self.centroid = []
+        # init zero with dimension of first entry
+        self.clusterDimesion = len(self.entries[0].data)
+        for i in range(self.clusterDimesion):
+            self.centroid.append(0.0)
+        # summ data in each dimension
         for entry in self.entries:
             for idx, coordinate in enumerate(entry.data):
                 self.centroid[idx] += coordinate
-        size = len(self.entries)
+        # divide by entry count
         for idx, coordinate in enumerate(self.centroid):
             self.centroid[idx] = coordinate / size
         self.__calculateCentroidSqSumm()
@@ -29,7 +39,7 @@ class Cluster(object):
 
     def cosine(self, entry: Entry) -> float:
         sumxx, sumxy = 0.0, 0.0
-        for i in range(10):
+        for i in range(self.clusterDimesion):
             x = entry.data[i]
             sumxx += x*x
             sumxy += x*self.centroid[i]
