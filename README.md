@@ -1,4 +1,13 @@
 # BME688Analysis
 BME688 AI Experiments
 
- copy [cosine/config.conf.template](cosine/config.conf.template) to cosine/config.conf and customise to your setup
+## Setup
+
+### Configuration
+copy [cosine/config.conf.template](cosine/config.conf.template) to cosine/config.conf and customise to your setup
+
+### Installation
+`pip install -r requirements.txt`
+
+# Start
+`python .\cosine\cosine.py`
