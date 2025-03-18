@@ -42,6 +42,8 @@ class Entry(object):
 
     def cosineToCenter(self):
         if self.cosineToCenterTemp is None:
+            # init center if not done
+            Entry.getCenter()
             sumxx, sumxy = 0.0, 0.0
             for i in range(10):
                 x = self.data[i]
@@ -65,7 +67,7 @@ class Entry(object):
             sumxx += x*x
             sumxy += x*Entry.max[i]
         return sumxy/math.sqrt(sumxx*Entry.maxSqSumm)
-
+    
     @staticmethod
     def getCenter():
         if Entry.center is None:

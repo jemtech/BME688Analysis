@@ -18,13 +18,8 @@ def __handleData(cursor):
 
 def plotCosines():
     fig, ax = pyplot.subplots()
-
-
     for cluster in clusters:
         ax.plot(cosinesToCluster(cluster), label=cluster.name)
-    #pyplot.plot(cosinesToCenter(), "r")
-    #pyplot.plot(cosinesToMin(), "g")
-    #pyplot.plot(cosinesToMax(), "b")
     legend = ax.legend(loc='best', shadow=True, fontsize='x-large')
     pyplot.ylabel('cosine to data')
     pyplot.xlabel('time')
