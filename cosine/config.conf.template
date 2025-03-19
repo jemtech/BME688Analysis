@@ -14,3 +14,7 @@ level = DEBUG
 host = 
 port = 1883
 clientName = BME688AI
+[Cluster]
+training_data = [
+    {"name":" "my first cluster", "index":[{"start":123, "end":456}, {"start":13, "end":30}]},
+    {"name": "my second cluster", "index":[{"start":987, "end":1002}]}]

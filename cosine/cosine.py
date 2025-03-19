@@ -3,6 +3,7 @@ import db.DBConnection as DB
 import matplotlib.pyplot as pyplot
 from data.entry import Entry
 from data.cluster import Cluster
+import json
 
 def loadData():
     tableName = Config.getConfig()['DB']['data_table']
@@ -33,11 +34,12 @@ def cosinesToCluster(cluster: Cluster) -> list[float]:
 
 clusters = []
 def initClusters():
-    clusters.append(Cluster(data[865:925] + data[311:324], "fresh air"))
-    clusters.append(Cluster(data[332:860], "used air"))
-    clusters.append(Cluster(data[940:947], "Isopropanol"))
-    clusters.append(Cluster(data[975:992], "Butan"))
-    clusters.append(Cluster(data[1006:1023], "Petrol"))
+    trainingData = json.loads(Config.getConfig()['Cluster']['training_data'])
+    for clusterConfig in trainingData:
+        clusterData = []
+        for dataIndex in clusterConfig['index']:
+            clusterData += data[dataIndex['start']:dataIndex['end']]
+        clusters.append(Cluster(clusterData, clusterConfig['name']))
 
 def main():
     print("Start")
