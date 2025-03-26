@@ -1,3 +1,4 @@
 mysql-connector-python
 matplotlib
 PyQt6
+unittest2

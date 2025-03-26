@@ -1,20 +1,21 @@
 from data.entry import Entry
 import math
+from typing import List
 
 class Cluster(object):
-    entries = None
-    centroid = None
-    centroidSqSumm = None
-    name = None
-    clusterDimesion = None
+    entries:List[Entry] = None
+    centroid:List[float] = None
+    centroidSqSumm:float = None
+    name:str = None
+    clusterDimesion:int = None
 
-    def __init__(self, entries: list[Entry], name: str):
+    def __init__(self, entries: List[Entry], name: str):
         self.entries = entries
         self.name = name
         self.__calculateCentroid()
 
     def __calculateCentroid(self):
-        size = len(self.entries)
+        size:int = len(self.entries)
         if size == 0:
             self.centroid = None
             return
@@ -38,9 +39,8 @@ class Cluster(object):
             self.centroidSqSumm += coordinate * coordinate
 
     def cosine(self, entry: Entry) -> float:
-        sumxx, sumxy = 0.0, 0.0
+        sumxy:float = 0.0
         for i in range(self.clusterDimesion):
-            x = entry.data[i]
-            sumxx += x*x
+            x:float = entry.data[i]
             sumxy += x*self.centroid[i]
-        return sumxy/math.sqrt(sumxx*self.centroidSqSumm)
+        return sumxy/math.sqrt(entry.sqSum()*self.centroidSqSumm)

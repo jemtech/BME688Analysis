@@ -1,8 +1,9 @@
 import sys
 import math
+from typing import List
 
 class Entry(object):
-    min = [sys.float_info.max,
+    min:List[float] = [sys.float_info.max,
            sys.float_info.max,
            sys.float_info.max,
            sys.float_info.max,
@@ -12,14 +13,14 @@ class Entry(object):
            sys.float_info.max,
            sys.float_info.max,
            sys.float_info.max]
-    max = [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]
-    center = None
-    centerSqSumm = 0.0
-    maxSqSumm = 0.0
-    minSqSumm = 0.0
+    max:List[float] = [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]
+    center:List[float] = None
+    centerSqSumm:float = 0.0
+    maxSqSumm:float = 0.0
+    minSqSumm:float = 0.0
     
-    def __init__(self, ohm0, ohm1, ohm2, ohm3, ohm4, ohm5, ohm6, ohm7, ohm8, ohm9):
-        self.data = []
+    def __init__(self, ohm0:float, ohm1:float, ohm2:float, ohm3:float, ohm4:float, ohm5:float, ohm6:float, ohm7:float, ohm8:float, ohm9:float):
+        self.data:List[float] = []
         self.data.append(ohm0)
         self.data.append(ohm1)
         self.data.append(ohm2)
@@ -30,8 +31,10 @@ class Entry(object):
         self.data.append(ohm7)
         self.data.append(ohm8)
         self.data.append(ohm9)
+        self.dimension: int = len(self.data)
         self.__minMax()
-        self.cosineToCenterTemp = None
+        self.cosineToCenterTemp:float = None
+        self.sqSumMem:float = None
 
     def __minMax(self):
         for idx, ohm in enumerate(self.data):
@@ -40,36 +43,38 @@ class Entry(object):
             if ohm > Entry.max[idx]:
                 Entry.max[idx] = ohm
 
-    def cosineToCenter(self):
+    def sqSum(self) -> float:
+        if self.sqSumMem is None:
+            self.sqSumMem = 0.0
+            for i in range(self.dimension):
+                x:float = self.data[i]
+                self.sqSumMem += x*x
+        return self.sqSumMem
+
+    def cosineToCenter(self) -> float:
         if self.cosineToCenterTemp is None:
             # init center if not done
             Entry.getCenter()
-            sumxx, sumxy = 0.0, 0.0
-            for i in range(10):
-                x = self.data[i]
-                sumxx += x*x
-                sumxy += x*Entry.center[i]
-            self.cosineToCenterTemp = sumxy/math.sqrt(sumxx*Entry.centerSqSumm)
+            sumxy = 0.0
+            for i in range(self.dimension):
+                sumxy += self.data[i]*Entry.center[i]
+            self.cosineToCenterTemp = sumxy/math.sqrt(self.sqSum()*Entry.centerSqSumm)
         return self.cosineToCenterTemp
 
-    def cosineToMin(self):
-        sumxx, sumxy = 0.0, 0.0
-        for i in range(10):
-            x = self.data[i]
-            sumxx += x*x
-            sumxy += x*Entry.min[i]
-        return sumxy/math.sqrt(sumxx*Entry.minSqSumm)
+    def cosineToMin(self) -> float:
+        sumxy = 0.0
+        for i in range(self.dimension):
+            sumxy += self.data[i]*Entry.min[i]
+        return sumxy/math.sqrt(self.sqSum()*Entry.minSqSumm)
 
-    def cosineToMax(self):
-        sumxx, sumxy = 0.0, 0.0
-        for i in range(10):
-            x = self.data[i]
-            sumxx += x*x
-            sumxy += x*Entry.max[i]
-        return sumxy/math.sqrt(sumxx*Entry.maxSqSumm)
+    def cosineToMax(self) -> float:
+        sumxy = 0.0
+        for i in range(self.dimension):
+            sumxy += self.data[i]*Entry.max[i]
+        return sumxy/math.sqrt(self.sqSum()*Entry.maxSqSumm)
     
     @staticmethod
-    def getCenter():
+    def getCenter() -> List[float]:
         if Entry.center is None:
             Entry.center = []
             Entry.centerSqSumm = 0.0
