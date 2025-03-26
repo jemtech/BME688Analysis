@@ -1,3 +1,4 @@
+[![Test (Python)](https://github.com/jemtech/BME688Analysis/actions/workflows/test.yml/badge.svg)](https://github.com/jemtech/BME688Analysis/actions/workflows/test.yml)
 # BME688Analysis
 BME688 AI Experiments
 
